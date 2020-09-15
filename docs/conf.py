@@ -47,9 +47,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Example Project Name'
-copyright = u"2019, Example Author"
-author = u"Example Author"
+project = u'mlframe'
+copyright = u"2020, Sam Stoltenberg"
+author = u"Sam Stoltenberg"
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
