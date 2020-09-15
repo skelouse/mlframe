@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = python -msphinx
-SPHINXPROJ    = example_cookiecutter_package
+SPHINXPROJ    = mlframe
 SOURCEDIR     = .
 BUILDDIR      = _build
 

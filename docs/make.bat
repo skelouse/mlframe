@@ -9,7 +9,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=.
 set BUILDDIR=_build
-set SPHINXPROJ=example_cookiecutter_package
+set SPHINXPROJ=mlframe
 
 if "%1" == "" goto help
 
