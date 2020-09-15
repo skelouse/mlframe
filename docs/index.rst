@@ -13,7 +13,7 @@ mlframe's documentation!
    authors
    history
 
-.. automodapi:: mlframe.MLFrame
+.. automodapi:: mlframe
    :no-inherited-members:
 
 Indices and tables
