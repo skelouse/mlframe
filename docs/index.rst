@@ -13,9 +13,6 @@ mlframe's documentation!
    authors
    history
 
-.. automodule:: mlframe
-   :members:
-
 Indices and tables
 ==================
 * :ref:`genindex`
