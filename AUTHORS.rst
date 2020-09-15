@@ -5,7 +5,7 @@ Credits
 Development Lead
 ----------------
 
-* Example Author <example.email@email.com>
+* Sam Stoltenberg <sam@skelouse.com>
 
 Contributors
 ------------
