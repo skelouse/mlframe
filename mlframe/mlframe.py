@@ -1,5 +1,6 @@
 import copy
 import inspect
+from os import replace
 from matplotlib.pyplot import title
 import pandas as pd
 import numpy as np
@@ -37,14 +38,11 @@ class MLFrame(pd.DataFrame):
 
         See pandas.DataFrame documentation
     https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
-
-    Attributes
-    ----------------------------------------
-    model[statsmodels.regression.linear_model.OLS]::
-        https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLS.html#statsmodels.regression.linear_model.OLS
-
     """
+
     model = None
+    """[statsmodels.regression.linear_model.OLS]
+        https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLS.html#statsmodels.regression.linear_model.OLS"""
 
     def __init__(self, frame, **kwargs):
         super(MLFrame, self).__init__(frame, **kwargs)
@@ -58,22 +56,19 @@ class MLFrame(pd.DataFrame):
         return list(self.select_dtypes('number').columns)
 
     @staticmethod
-    def replace_all(string):
+    def replace_all(string, replace_numbers=False):
         """Replaces bad characters in a string for
-        column names to work in a R~formula"""
-        return string.replace(
+        column names to work in a R~formula
+        
+        Parameters
+        ----------------------------------------
+        replace_numbers[bool]:: Whether to replace numbers with their
+        english counterpart i.e (1 -> one)
+        """
+        string = string.replace(
                       ' ', '_').replace(
                       '(', '').replace(
                       ')', '').replace(
-                    #   '1', 'one').replace(
-                    #   '2', 'two').replace(
-                    #   '3', 'three').replace(
-                    #   '4', 'four').replace(
-                    #   '5', 'five').replace(
-                    #   '6', 'six').replace(
-                    #   '7', 'seven').replace(
-                    #   '8', 'eight').replace(
-                    #   '9', 'nine').replace(
                       '.', '_').replace(
                       '-', '_').replace(
                       '/', '_').replace(
@@ -81,6 +76,18 @@ class MLFrame(pd.DataFrame):
                       '+', '_').replace(
                       ' ', '_').replace(
                       ' ', '_')
+        if replace_numbers:
+            string = string.replace(
+                      '1', 'one').replace(
+                      '2', 'two').replace(
+                      '3', 'three').replace(
+                      '4', 'four').replace(
+                      '5', 'five').replace(
+                      '6', 'six').replace(
+                      '7', 'seven').replace(
+                      '8', 'eight').replace(
+                      '9', 'nine')
+        return string
 
     def clean_col_names(self,
                         inplace=False,

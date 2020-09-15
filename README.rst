@@ -9,29 +9,30 @@ mlframe
 .. image:: https://img.shields.io/travis/skelouse/mlframe.svg
         :target: https://travis-ci.org/skelouse/mlframe
 
-.. image:: https://readthedocs.org/projects/example-cookiecutter-package/badge/?version=latest
-        :target: https://example-cookiecutter-package.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/mlframe/badge/?version=latest
+        :target: https://mlframe.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
 
 
 
-Example package.
+mlframe
 
 
 * Free software: GNU General Public License v3
-* Documentation: https://example-cookiecutter-package.readthedocs.io.
+* Documentation: https://mlframe.readthedocs.io/en/latest/api/mlframe.MLFrame.html
 
 
 Features
 --------
 
-* TODO
+* Wraps a pandas DataFrame
+* Linear Regression modeling and plotting
 
 Credits
 -------
 
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+This package was created with Cookiecutter_ and the `jirvingphd/example_cookiecutter_package`_ project template. 
 
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+.. _`jirvingphd/example_cookiecutter_package`: https://github.com/jirvingphd/example_cookiecutter_package

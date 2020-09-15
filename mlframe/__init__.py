@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-"""Top-level package for Example Project Name."""
+"""Top-level package for mlframe."""
 
 __author__ = """Sam Stoltenberg"""
 __email__ = 'sam@skelouse.com'
-__version__ = '0.1.5'
+__version__ = '0.1.6'
 
 from .mlframe import MLFrame
 print("For convinent loading 'from mlframe import MLFrame")

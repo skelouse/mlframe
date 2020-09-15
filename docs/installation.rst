@@ -8,13 +8,13 @@ Installation
 Stable release
 --------------
 
-To install Example Project Name, run this command in your terminal:
+To install mlframe, run this command in your terminal:
 
 .. code-block:: console
 
     $ pip install mlframe
 
-This is the preferred method to install Example Project Name, as it will always install the most recent stable release.
+This is the preferred method to install mlframe, as it will always install the most recent stable release.
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
@@ -26,7 +26,7 @@ you through the process.
 From sources
 ------------
 
-The sources for Example Project Name can be downloaded from the `Github repo`_.
+The sources for mlframe can be downloaded from the `Github repo`_.
 
 You can either clone the public repository:
 

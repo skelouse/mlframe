@@ -1,4 +1,4 @@
-* Example Project Name version:
+* mlframe version: 0.1.6
 * Python version:
 * Operating System:
 
