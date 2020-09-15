@@ -34,8 +34,16 @@ def inherit_docstrings(cls):
 class MLFrame(pd.DataFrame):
     """A pd.DataFrame with an inplace model, and LinearRegression
     modeling functions.
-    
-    **See pandas.DataFrame documentation"""
+
+        See pandas.DataFrame documentation
+    https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
+
+    Attributes
+    ----------------------------------------
+    model[statsmodels.regression.linear_model.OLS]::
+        https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLS.html#statsmodels.regression.linear_model.OLS
+
+    """
     model = None
 
     def __init__(self, frame, **kwargs):
@@ -215,6 +223,7 @@ class MLFrame(pd.DataFrame):
 
     def log(self, columns, inplace=False, verbose=True):
         """ logs the listed columns of the dataframe
+
         Parameters
         ----------------------------------------
         columns[list, str]::
@@ -268,6 +277,7 @@ class MLFrame(pd.DataFrame):
 
     def scale(self, columns, inplace=False, verbose=True):
         """ Scales the listed columns of the dataframe
+
         Parameters
         ----------------------------------------
         columns[list, str]::
@@ -344,11 +354,11 @@ class MLFrame(pd.DataFrame):
     
     @wrapper
     def wrap__getitem__(self, df):
+        """Wrapper for get item [] so that it returns an
+        MLFrame rather then a pd.DataFrame"""
         return df
 
     def __getitem__(self, key):
-        """Wrapper for get item [] so that it returns an
-        MLFrame rather then a pd.DataFrame"""
         call = super().__getitem__(key)
         if isinstance(call, pd.DataFrame):
             return self.wrap__getitem__(call)
@@ -1055,6 +1065,7 @@ class MLFrame(pd.DataFrame):
 
     def distplot(self, target, **kwargs):
         """Plots a seaborn displot of target
+
         Parameters
         ----------------------------------------
         target[str]::
@@ -1079,6 +1090,7 @@ class MLFrame(pd.DataFrame):
 
     def jointplot(self, x, target, **kwargs):
         """Plots a seaborn jointplot of x and target
+
         Parameters
         ----------------------------------------
         x[str]::
@@ -1103,6 +1115,7 @@ class MLFrame(pd.DataFrame):
 
     def boxplot(self, target, **kwargs):
         """Plots a seaborn boxplot of target
+
         Parameters
         ----------------------------------------
         target[str]::
@@ -1152,6 +1165,8 @@ class MLFrame(pd.DataFrame):
                          seed=42,
                          verbose=True):
         """
+        Runs a train test split algorithm on the data
+
         Parameters
         ----------------------------------------
         target[str]::
