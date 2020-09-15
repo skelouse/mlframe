@@ -27,10 +27,6 @@ Features
 --------
 
 * TODO
-# do examples in the doc strings
-# add columns for the plots
-#possibly use cook's distance outlier removal  (YellowBrick package - Slack from James)
-
 
 Credits
 -------
