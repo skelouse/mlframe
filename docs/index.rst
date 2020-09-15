@@ -13,6 +13,9 @@ mlframe's documentation!
    authors
    history
 
+.. automodapi:: mlframe.MLFrame
+   :no-inherited-members:
+
 Indices and tables
 ==================
 * :ref:`genindex`
