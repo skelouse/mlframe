@@ -1,4 +1,4 @@
-Welcome to Example Project Name's documentation!
+mlframe's documentation!
 ======================================
 
 .. toctree::
@@ -13,7 +13,7 @@ Welcome to Example Project Name's documentation!
    authors
    history
 
-.. automodule:: mlframe.MLFrame
+.. automodule:: mlframe
    :members:
 
 Indices and tables
