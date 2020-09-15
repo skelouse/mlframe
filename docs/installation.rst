@@ -32,13 +32,13 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/jirvingphd/mlframe
+    $ git clone git://github.com/skelouse/mlframe
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl  -OL https://github.com/jirvingphd/mlframe/tarball/master
+    $ curl  -OL https://github.com/skelouse/mlframe/tarball/master
 
 Once you have a copy of the source, you can install it with:
 
@@ -47,5 +47,5 @@ Once you have a copy of the source, you can install it with:
     $ python setup.py install
 
 
-.. _Github repo: https://github.com/jirvingphd/mlframe
+.. _Github repo: https://github.com/skelouse/mlframe
 .. _tarball: https://github.com/skelouse/mlframe/tarball/master

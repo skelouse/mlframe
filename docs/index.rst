@@ -13,6 +13,9 @@ Welcome to Example Project Name's documentation!
    authors
    history
 
+.. automodule:: mlframe.MLFrame
+   :members:
+
 Indices and tables
 ==================
 * :ref:`genindex`

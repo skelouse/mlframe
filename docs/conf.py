@@ -129,7 +129,7 @@ latex_elements = {
 # [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'mlframe.tex',
-     u'Example Project Name Documentation',
+     u'mlframe Documentation',
      u'Example Author', 'manual'),
 ]
 
@@ -140,7 +140,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     (master_doc, 'mlframe',
-     u'Example Project Name Documentation',
+     u'mlframe Documentation',
      [author], 1)
 ]
 
@@ -152,7 +152,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'mlframe',
-     u'Example Project Name Documentation',
+     u'mlframe Documentation',
      author,
      'mlframe',
      'One line description of project.',

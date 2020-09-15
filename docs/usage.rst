@@ -2,6 +2,6 @@
 Usage
 =====
 
-To use Example Project Name in a project::
+To use mlframe in a project::
 
-    import mlframe
+    from mlframe import MLFrame

@@ -1,13 +1,13 @@
 ====================
-Example Project Name
+mlframe
 ====================
 
 
 .. image:: https://img.shields.io/pypi/v/mlframe.svg
         :target: https://pypi.python.org/pypi/mlframe
 
-.. image:: https://img.shields.io/travis/jirvingphd/mlframe.svg
-        :target: https://travis-ci.org/jirvingphd/mlframe
+.. image:: https://img.shields.io/travis/skelouse/mlframe.svg
+        :target: https://travis-ci.org/skelouse/mlframe
 
 .. image:: https://readthedocs.org/projects/example-cookiecutter-package/badge/?version=latest
         :target: https://example-cookiecutter-package.readthedocs.io/en/latest/?badge=latest
