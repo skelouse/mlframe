@@ -50,11 +50,6 @@ class MLFrame(pd.DataFrame):
     def replace_all(string, replace_numbers=False):
         """Replaces bad characters in a string for
         column names to work in a R~formula
-
-        Parameters
-        ----------------------------------------
-        replace_numbers[bool]:: Whether to replace numbers with their
-        english counterpart i.e (1 -> one)
         """
         string = string.replace(
                       ' ', '_').replace(
@@ -82,7 +77,8 @@ class MLFrame(pd.DataFrame):
 
     def clean_col_names(self,
                         inplace=False,
-                        verbose=True):
+                        verbose=True,
+                        replace_numbers=False):
         """Cleans the column names of a DataFrame
         for use in an R~Formula
 
@@ -94,6 +90,9 @@ class MLFrame(pd.DataFrame):
         verbose[bool]::
             Whether to show the difference between
             the old columns and clean columns or not
+        replace_numbers[bool]:: 
+            Whether to replace numbers with their
+            english counterpart i.e (1 -> one)
 
         Returns
         ----------------------------------------
@@ -115,7 +114,7 @@ class MLFrame(pd.DataFrame):
                     print(col[0], "-->", col[1])
 
         if inplace:
-            new_columns = [self.replace_all(c.strip())
+            new_columns = [self.replace_all(c.strip(), replace_numbers)
                            for c in self.columns.values.tolist()]
             old_columns = self.columns
             if verbose:
@@ -123,7 +122,7 @@ class MLFrame(pd.DataFrame):
             self.columns = new_columns
         else:
             df = self.copy()
-            new_columns = [self.replace_all(c.strip())
+            new_columns = [self.replace_all(c.strip(), replace_numbers)
                            for c in df.columns.values.tolist()]
             old_columns = df.columns
             if verbose:

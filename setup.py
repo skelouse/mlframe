@@ -19,8 +19,7 @@ requirements = [
     'seaborn>=0.10.1',
     'statsmodels',
     'scipy>=1.3.1',
-    'scikit-learn',
-    'tox'
+    'scikit-learn'
 ]
 
 setup_requirements = []
