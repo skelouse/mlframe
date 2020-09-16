@@ -1,8 +1,3 @@
-====================
-mlframe
-====================
-
-
 .. image:: https://img.shields.io/pypi/v/mlframe.svg
         :target: https://pypi.python.org/pypi/mlframe
 
@@ -14,25 +9,13 @@ mlframe
         :alt: Documentation Status
 
 
-
-
-mlframe
-
-
-* Free software: GNU General Public License v3
-* Documentation: https://mlframe.readthedocs.io/en/latest/api/mlframe.MLFrame.html
-
-
 Features
 --------
 
 * Wraps a pandas DataFrame
 * Linear Regression modeling and plotting
+* More coming soon...
 
-Credits
--------
+Contribute_
 
-This package was created with Cookiecutter_ and the `jirvingphd/example_cookiecutter_package`_ project template. 
-
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`jirvingphd/example_cookiecutter_package`: https://github.com/jirvingphd/example_cookiecutter_package
+.. _Contribute: https://mlframe.readthedocs.io/en/latest/contributing.html

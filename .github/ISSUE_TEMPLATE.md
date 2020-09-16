@@ -1,4 +1,4 @@
-* mlframe version: 0.1.6
+* mlframe version: 0.1.8
 * Python version:
 * Operating System:
 

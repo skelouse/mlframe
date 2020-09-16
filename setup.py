@@ -45,7 +45,7 @@ setup(
     description="mlframe package.",
     install_requires=requirements,
     license="GNU General Public License v3",
-    long_description=readme + '\n\n' + history,
+    long_description=readme,
     include_package_data=True,
     keywords='mlframe',
     name='mlframe',
@@ -53,7 +53,15 @@ setup(
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
+    project_urls={
+        'Homepage': "https://github.com/skelouse/mlframe",
+        'Download': "https://pypi.org/project/mlframe/",
+        'Source Code': "https://github.com/skelouse/mlframe/tree/master/mlframe",
+        "Documentation": "https://mlframe.readthedocs.io/en/latest/",
+        "Bug Tracker": "https://github.com/skelouse/mlframe/issues",
+        "Frame Documentation": "https://mlframe.readthedocs.io/en/latest/api/mlframe.MLFrame.html"
+    },
     url='https://github.com/skelouse/mlframe',
-    version='0.1.6',
+    version='0.1.8',
     zip_safe=False,
 )
