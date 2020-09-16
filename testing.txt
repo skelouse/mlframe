@@ -1,0 +1,4 @@
+cd into main directory
+python mlframe/load_then_test.py
+`enter`
+# change full = 1  to full = 0 in test.py to have small tests

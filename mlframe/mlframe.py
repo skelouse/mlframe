@@ -46,6 +46,23 @@ class MLFrame(pd.DataFrame):
         """Computes and returns Numerical columns"""
         return list(self.select_dtypes('number').columns)
 
+    def get_cols(self, name):
+        """
+        Returns list of columns with name or names in it
+
+        Parameters
+        ----------------------------------------
+        name[str, list]::
+            str or list of str for column selection
+        """
+        if isinstance(name, list):
+            names = name
+            cols = []
+            for name in names:
+                cols += [col for col in self.columns if name in col]
+            return cols
+        return [col for col in self.columns if name in col]
+
     @staticmethod
     def replace_all(string, replace_numbers=False):
         """Replaces bad characters in a string for
@@ -100,7 +117,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> df.clean_col_names()
         Columns changed:
         model year --> model_year
@@ -148,7 +165,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> df.drop(['car name'], axis=1, inplace=True)
         >>> df.get_vif('mpg', verbose=False)
         const          763.558
@@ -195,7 +212,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> df.drop(['car name'], axis=1, inplace=True)
         >>> df.get_vif_cols('mpg', verbose=False)
         horsepower      9.944
@@ -238,7 +255,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> df.drop(['car name'], axis=1, inplace = True)
 
         >>> df = df.log(columns=['mpg', 'cylinders'])
@@ -291,7 +308,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> df.drop(['car name'], axis=1, inplace = True)
 
         >>> df = df.scale(columns=['mpg', 'cylinders'])
@@ -394,7 +411,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> df.clean_col_names(verbose=False, inplace=True)
         >>> # splitting car_name into model for categorizing
         >>> df['model'] = df['car_name'].apply(
@@ -443,7 +460,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> idx_outliers = df.find_outliers_IQR('horsepower', verbose=True)
         Found 10 outliers using IQR in horsepower or ~ 2.55%
         >>> df = MLFrame(df[~idx_outliers])
@@ -475,7 +492,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> idx_outliers = df.find_outliers_Z('horsepower', verbose=True)
         Found 5 outliers using z_score in horsepower or ~ 1.28%
         >>> df = MLFrame(df[~idx_outliers])
@@ -519,7 +536,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> df = df.outlier_removal('horsepower',
         ...                          IQR=True)
         Found 10 outliers using IQR in horsepower or ~ 2.55%
@@ -647,7 +664,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> df.ms_matrix()
 
         """
@@ -806,7 +823,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> df.clean_col_names(inplace=True)
         >>> df.lrmodel('mpg', inplace=True)
         >>> df.qq_plot()
@@ -848,7 +865,7 @@ class MLFrame(pd.DataFrame):
         ----------------------------------------
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> df.clean_col_names(inplace=True)
         >>> df.lrmodel('mpg', inplace=True)
         >>> df.model_resid_scatter('mpg')
@@ -902,7 +919,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> df.clean_col_names(inplace=True)
         >>> df.lrmodel('mpg', verbose=False, inplace=True)
         >>> df.model.pvalues.max()
@@ -953,7 +970,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> df.clean_col_names(inplace=True)
         >>> df.model_and_plot('mpg')
         """
@@ -991,7 +1008,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> df.clean_col_names(inplace=True, verbose=False)
         >>> df.drop('car_name', axis=1, inplace=True)
         >>> df.plot_corr(annot=True)
@@ -1028,7 +1045,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> df.clean_col_names(inplace=True, verbose=False)
         >>> df.drop('car_name', axis=1, inplace=True)
         >>> df.plot_coef()
@@ -1058,7 +1075,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> fig, ax = plt.subplots()
         >>> df.regplot('horsepower', 'mpg', ax=ax)
         """
@@ -1083,7 +1100,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> fig, ax = plt.subplots()
         >>> df.distplot('mpg', ax=ax)
         """
@@ -1109,7 +1126,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> df.jointplot('horsepower', 'mpg')
         """
         return sns.jointplot(data=self, x=x, y=target, **kwargs)
@@ -1132,7 +1149,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> fig, ax = plt.subplots()
         >>> df.boxplot('mpg', ax=ax)
         """
@@ -1186,7 +1203,7 @@ class MLFrame(pd.DataFrame):
 
         Example Usage
         ----------------------------------------
-        >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
         >>> df.clean_col_names(inplace=True)
         >>> df.drop(['car_name', 'origin'], axis=1, inplace=True)
         >>> model = df.train_test_split('mpg',

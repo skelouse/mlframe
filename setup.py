@@ -62,6 +62,6 @@ setup(
         "Frame Documentation": "https://mlframe.readthedocs.io/en/latest/api/mlframe.MLFrame.html"
     },
     url='https://github.com/skelouse/mlframe',
-    version='0.1.10',
+    version='0.1.11',
     zip_safe=False,
 )

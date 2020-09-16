@@ -70,6 +70,7 @@ class Tester():
         jointplot(self)
         boxplot(self)
         train_test_split(self)
+        get_cols(self)
 
         if self.failed == 1:
             print("Failed 1 test, as expected")
@@ -243,6 +244,12 @@ def train_test_split(t):  # added
     t(train_test_split, expected)
 
 
+def get_cols(t):  # added
+    from tests import get_cols
+    expected = ['mpg', 'cylinders', 'displacement', 'acceleration', 'car name']
+    t(get_cols, expected)
+
+
 # skeleton
 """
 def xxxxx(t):
@@ -254,10 +261,10 @@ def xxxxx(t):
 
 def quick_test(dft):
     """For building new tests"""
-    from tests import outlier_removal
-    importlib.reload(outlier_removal)
-    from tests import outlier_removal
-    print(outlier_removal.main(df_test))
+    from tests import get_cols
+    importlib.reload(get_cols)
+    from tests import get_cols
+    print(get_cols.main(df_test))
 
 
 def test_all(df):
@@ -283,5 +290,5 @@ def test_all(df):
 
 
 if __name__ == "__main__":
-    df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+    df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
     test_all(df)
