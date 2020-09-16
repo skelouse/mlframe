@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='mlframe',
-      version='0.1.9',
+      version='0.1.10',
       description="mlframe",
       long_description="",
       author='Sam Stoltenberg',

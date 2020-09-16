@@ -19,7 +19,8 @@ requirements = [
     'seaborn>=0.10.1',
     'statsmodels',
     'scipy>=1.3.1',
-    'scikit-learn'
+    'scikit-learn',
+    'tox'
 ]
 
 setup_requirements = []
@@ -62,6 +63,6 @@ setup(
         "Frame Documentation": "https://mlframe.readthedocs.io/en/latest/api/mlframe.MLFrame.html"
     },
     url='https://github.com/skelouse/mlframe',
-    version='0.1.9',
+    version='0.1.10',
     zip_safe=False,
 )
