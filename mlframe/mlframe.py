@@ -1,31 +1,22 @@
-import copy
-import inspect
-from os import replace
-from matplotlib.pyplot import title
 import pandas as pd
 import numpy as np
 from functools import wraps, partial
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 import scipy.stats as stats
-import statsmodels.stats.api as sms
 from statsmodels.stats.outliers_influence import variance_inflation_factor
-from functools import wraps
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import r2_score
-# import warnings
-# warnings.filterwarnings('ignore')
-
 import matplotlib.pyplot as plt
 import seaborn as sns
 import missingno as ms
-
-
 from inspect import getmembers, isfunction
-"https://stackoverflow.com/questions/17393176/python-3-method-docstring-inheritance-without-breaking-decorators-or-violating"
+
+
 def inherit_docstrings(cls):
+    """https://stackoverflow.com/questions/17393176/"""
     for name, func in getmembers(cls, isfunction):
-        if func.__doc__: continue
+        if func.__doc__:
+            continue
         for parent in cls.__mro__[1:]:
             if hasattr(parent, name):
                 func.__doc__ = getattr(parent, name).__doc__
@@ -42,7 +33,7 @@ class MLFrame(pd.DataFrame):
 
     model = None
     """[statsmodels.regression.linear_model.OLS]
-        https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLS.html#statsmodels.regression.linear_model.OLS"""
+        https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLS.html"""  # noqa
 
     def __init__(self, frame, **kwargs):
         super(MLFrame, self).__init__(frame, **kwargs)
@@ -59,7 +50,7 @@ class MLFrame(pd.DataFrame):
     def replace_all(string, replace_numbers=False):
         """Replaces bad characters in a string for
         column names to work in a R~formula
-        
+
         Parameters
         ----------------------------------------
         replace_numbers[bool]:: Whether to replace numbers with their
@@ -125,7 +116,7 @@ class MLFrame(pd.DataFrame):
 
         if inplace:
             new_columns = [self.replace_all(c.strip())
-                            for c in self.columns.values.tolist()]
+                           for c in self.columns.values.tolist()]
             old_columns = self.columns
             if verbose:
                 show_difference(old_columns, new_columns)
@@ -133,7 +124,7 @@ class MLFrame(pd.DataFrame):
         else:
             df = self.copy()
             new_columns = [self.replace_all(c.strip())
-                            for c in df.columns.values.tolist()]
+                           for c in df.columns.values.tolist()]
             old_columns = df.columns
             if verbose:
                 show_difference(old_columns, new_columns)
@@ -173,7 +164,7 @@ class MLFrame(pd.DataFrame):
         X = self.drop(target, axis=1)
         X = sm.add_constant(X)
         vif = [variance_inflation_factor(X.values, i)
-            for i in range(X.shape[1])]
+               for i in range(X.shape[1])]
         s = pd.Series(dict(zip(X.columns, vif)))
         if verbose:
             print(s)
@@ -215,7 +206,7 @@ class MLFrame(pd.DataFrame):
         dtype: float64
         """
         vif_results = self.get_vif(target, verbose=False)
-        bad_vif = list(vif_results[vif_results>threshold].index)
+        bad_vif = list(vif_results[vif_results > threshold].index)
         if 'const' in bad_vif:
             bad_vif.remove('const')
         num_vif = {}
@@ -250,7 +241,7 @@ class MLFrame(pd.DataFrame):
         ----------------------------------------
         >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
         >>> df.drop(['car name'], axis=1, inplace = True)
-        
+
         >>> df = df.log(columns=['mpg', 'cylinders'])
         Logging:
            mpg
@@ -303,7 +294,7 @@ class MLFrame(pd.DataFrame):
         ----------------------------------------
         >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
         >>> df.drop(['car name'], axis=1, inplace = True)
-        
+
         >>> df = df.scale(columns=['mpg', 'cylinders'])
         Scaling:
            mpg
@@ -315,7 +306,7 @@ class MLFrame(pd.DataFrame):
         """
         def scale(df, col):
             df[col] = ((df[col] - np.mean(df[col]))
-                      / np.sqrt(np.var(df[col])))
+                       / np.sqrt(np.var(df[col])))
         if verbose:
             print("\nScaling:")
             if isinstance(columns, list):
@@ -358,7 +349,7 @@ class MLFrame(pd.DataFrame):
     @wrapper
     def copy(self, *args, **kwargs):
         return super(MLFrame, self).copy(*args, **kwargs)
-    
+
     @wrapper
     def wrap__getitem__(self, df):
         """Wrapper for get item [] so that it returns an
@@ -377,10 +368,10 @@ class MLFrame(pd.DataFrame):
         return super(MLFrame, self).info(*args, **kwargs)
 
     def one_hot_encode(self,
-                        columns=[],
-                        drop_first=True,
-                        verbose=True,
-                        **kwargs):
+                       columns=[],
+                       drop_first=True,
+                       verbose=True,
+                       **kwargs):
         """Makes a one hot encoded dataframe
 
         Parameters
@@ -421,7 +412,7 @@ class MLFrame(pd.DataFrame):
                                     columns=columns,
                                     drop_first=drop_first,
                                     **kwargs))
-        
+
         if verbose:
             print("Added categorical columns")
             count_dict = {}
@@ -432,10 +423,9 @@ class MLFrame(pd.DataFrame):
                         count += 1
                 if count > 1:
                     count_dict[col] = count
-            for col, num in sorted(count_dict.items(), 
-                    key=lambda x: x[1]):
+            for col, num in sorted(count_dict.items(),
+                                   key=lambda x: x[1]):
                 print(num, '->', col)
-                                
         return df
 
     def find_outliers_IQR(self, col, verbose=True):
@@ -462,9 +452,9 @@ class MLFrame(pd.DataFrame):
         data = self[col]
         res = data.describe()
         IQR = res['75%']-res['25%']
-        thresh = 1.5* IQR
-        idx_outliers = ((data<res['25%']-thresh)
-                         | (data > res['75%']+thresh))
+        thresh = 1.5 * IQR
+        idx_outliers = ((data < res['25%'] - thresh)
+                        | (data > res['75%'] + thresh))
         if verbose:
             total = idx_outliers.sum()
             total_perc = round((total/len(self))*100, 2)
@@ -494,13 +484,13 @@ class MLFrame(pd.DataFrame):
         data = self[col]
         z_scores = np.abs(stats.zscore(data))
         z_scores = pd.Series(z_scores, index=data.index)
-        idx_outliers =z_scores > 3
+        idx_outliers = z_scores > 3
         if verbose:
             total = idx_outliers.sum()
             total_perc = round((total/len(self))*100, 2)
             print("Found {} outliers using z_score in {} or ~ {}%"
                   .format(total, col, total_perc))
-        return idx_outliers    
+        return idx_outliers
 
     def outlier_removal(self,
                         columns=[],
@@ -522,7 +512,7 @@ class MLFrame(pd.DataFrame):
             using z_score method
         verbose[bool]::
             Whether to print how many outliers were
-            found in each column or now       
+            found in each column or now
 
         Returns
         ----------------------------------------
@@ -536,7 +526,7 @@ class MLFrame(pd.DataFrame):
         Found 10 outliers using IQR in horsepower or ~ 2.55%
         Removed
         >>> # OR
-        >>> df = df.outlier_removal(['horsepower', 'mpg'], 
+        >>> df = df.outlier_removal(['horsepower', 'mpg'],
                                  z_score=True)
         Found 10 outliers using z_score in horsepower or ~ 2.55%
         Removed
@@ -544,31 +534,32 @@ class MLFrame(pd.DataFrame):
         Removed
         """
         if IQR:
+            _type = 'IQR'
             func = partial(self.find_outliers_IQR,
                            verbose=verbose)
         elif z_score:
+            _type = 'z_score'
             func = partial(self.find_outliers_Z,
                            verbose=verbose)
-        try:
-            func
-        except UnboundLocalError:
-            msg = "No method defined, try z_score=True, or IQR=True"
-            raise AttributeError(msg)
+        else:
+            raise AttributeError("No method defined (z_score or IQR)")
         df = self.copy()
+        num = len(df)
         if isinstance(columns, list):
             if not columns:
                 columns = self.columns
             for col in columns:
                 outliers = func(col)
-                num = len(df)
                 df = df[~outliers]
                 if verbose:
-                    print('Removed')
+                    print('Removed %s with %s removal'
+                          % ((num - len(df), _type)))
         else:
             outliers = func(columns)
             df = df[~outliers]
             if verbose:
-                print('Removed')
+                print('Removed %s outliers with %s removal'
+                      % ((num - len(df), _type)))
         return df
 
     def get_nulls(self, verbose=True):
@@ -654,7 +645,7 @@ class MLFrame(pd.DataFrame):
         ----------------------------------------
         kwargs{dict}::
             Arguments to send to ms.matrix
-        
+
         Example Usage
         ----------------------------------------
         >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
@@ -702,14 +693,14 @@ class MLFrame(pd.DataFrame):
 
         """
         nulls = self.isna().sum()
-        null_perc = nulls[nulls>0]/len(self)
+        null_perc = nulls[nulls > 0] / len(self)
         null_cols = list(null_perc.index)
         null_modes = dict(self[null_cols].mode())
         if verbose:
             for col, perc in null_perc.items():
                 print("Filling %s" % (round(perc*100, 2)),
                       "\b%", "of %s with %s"
-                    % (col, null_modes[col]))
+                      % (col, null_modes[col]))
         if inplace:
             for col, mode in null_modes.items():
                 self[col] = self[col].fillna(mode[0])
@@ -758,14 +749,14 @@ class MLFrame(pd.DataFrame):
 
         """
         nulls = self.isna().sum()
-        null_perc = nulls[nulls>0]/len(self)
+        null_perc = nulls[nulls > 0] / len(self)
         null_cols = list(null_perc.index)
         null_means = dict(self[null_cols].mean())
         if verbose:
             for col, perc in null_perc.items():
                 print("Filling %s" % (round(perc*100, 2)),
                       "\b%", "of %s with %s"
-                    % (col, null_means[col]))
+                      % (col, null_means[col]))
         if inplace:
             for col, mean in null_means.items():
                 self[col] = self[col].fillna(mean)
@@ -825,14 +816,16 @@ class MLFrame(pd.DataFrame):
             if 'ax' in kwargs:
                 kwargs['ax'].set_title('Model Residual QQ plot')
             return sm.graphics.qqplot(self.model.resid,
-                        fit=True, line='45', **kwargs)
+                                      fit=True,
+                                      line='45',
+                                      **kwargs)
         else:
             raise AttributeError('No model defined')
 
     def model_resid_scatter(self, target, ax=None,
                             title='',
                             scatter_kws={}, line_kws={}):
-        """Plots a scatter plot and axhline 
+        """Plots a scatter plot and axhline
         based on target and the model's residuals
 
         Parameters
@@ -880,11 +873,11 @@ class MLFrame(pd.DataFrame):
             plt.show()
 
     def lrmodel(self,
-                 target=None,
-                 columns=[],
-                 inplace=False,
-                 verbose=True,
-                 **kwargs):
+                target=None,
+                columns=[],
+                inplace=False,
+                verbose=True,
+                **kwargs):
         """Creates a LinearRegression model of target
 
         Parameters
@@ -922,7 +915,7 @@ class MLFrame(pd.DataFrame):
             columns = self.drop(target, axis=1).columns
         cols_form = '+'.join(columns)
         # cols_form = cols_form.replace(' ', '')
-        formula='%s~%s' % (target, cols_form)
+        formula = '%s~%s' % (target, cols_form)
         # possibly svd did not converge here
         kwds = dict(formula=formula, data=self)
         kwds.update(**kwargs)
@@ -932,16 +925,16 @@ class MLFrame(pd.DataFrame):
                 display(model.summary())
         except NameError:
             print(model.summary())
-        
+
         if inplace:
             self.model = model
         else:
             return model
 
     def model_and_plot(self,
-                      target,
-                      figsize=(10, 10),
-                      **kwargs):
+                       target,
+                       figsize=(10, 10),
+                       **kwargs):
         """Creates a new model based on target, plots a
         scatter plot of (target, model residuals), and
         plots a qqplot based on the model residuals.
@@ -970,11 +963,13 @@ class MLFrame(pd.DataFrame):
         fig, axes = plt.subplots(nrows=2, figsize=figsize)
         fig.tight_layout(pad=8.0)
         self.qq_plot(ax=axes[0])
-        self.model_resid_scatter(target, ax=axes[1],
+        self.model_resid_scatter(
+            target,
+            ax=axes[1],
             title='Model Residual Scatter plot',
-            line_kws=dict(color='k'))
+            line_kws=dict(color='k')
+            )
         return model
-        
 
     def plot_corr(self, figsize=(25, 25), annot=False,
                   **kwargs):
@@ -994,7 +989,7 @@ class MLFrame(pd.DataFrame):
         Returns
         ----------------------------------------
         fig, ax
-        
+
         Example Usage
         ----------------------------------------
         >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
@@ -1002,9 +997,9 @@ class MLFrame(pd.DataFrame):
         >>> df.drop('car_name', axis=1, inplace=True)
         >>> df.plot_corr(annot=True)
         """
-        corr=np.abs(self.corr())
+        corr = np.abs(self.corr())
         fig, ax = plt.subplots(figsize=figsize)
-        mask=np.zeros_like(corr, dtype=np.bool)
+        mask = np.zeros_like(corr, dtype=np.bool)
         mask[np.triu_indices_from(mask, k=0)] = True
         kwds = dict(mask=mask,
                     cmap=sns.diverging_palette(240, 10, n=10),
@@ -1013,7 +1008,7 @@ class MLFrame(pd.DataFrame):
                     ax=ax,
                     linewidths=1,
                     square=True,
-                    cbar_kws={'shrink':0.6})
+                    cbar_kws={'shrink': 0.6})
         kwds.update(**kwargs)
         sns.heatmap(corr, **kwds)
         return fig, ax
@@ -1031,7 +1026,7 @@ class MLFrame(pd.DataFrame):
         Returns
         ----------------------------------------
         <pandas.io.formats.style.Styler>
-        
+
         Example Usage
         ----------------------------------------
         >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
@@ -1081,8 +1076,8 @@ class MLFrame(pd.DataFrame):
             Arguments to send in with sns.distplot()
             see:
         https://seaborn.pydata.org/generated/seaborn.distplot.html
-            
-        
+
+
         Returns
         ----------------------------------------
         an sns.distplot
@@ -1108,7 +1103,7 @@ class MLFrame(pd.DataFrame):
             Arguments to send in with sns.jointplot()
             see:
         https://seaborn.pydata.org/generated/seaborn.jointplot.html
-        
+
         Returns
         ----------------------------------------
         an sns.jointplot
@@ -1131,7 +1126,7 @@ class MLFrame(pd.DataFrame):
             Arguments to send in with sns.boxplot()
             see:
         https://seaborn.pydata.org/generated/seaborn.boxplot.html
-        
+
         Returns
         ----------------------------------------
         an sns.boxplot
@@ -1152,14 +1147,14 @@ class MLFrame(pd.DataFrame):
         ----------------------------------------
         verbose[bool]::
             Whether to print out the series or not
-        
+
         Returns
         ----------------------------------------
         sorted pd.Series of columns --> r_squared"""
         r_squared = {}
         for col in self.columns:
             model = self.lrmodel('price', [col], verbose=False)
-            r_squared[col] =  model.rsquared
+            r_squared[col] = model.rsquared
         rs = pd.Series(r_squared).sort_values()
         if verbose:
             print("R Squareds")
@@ -1184,12 +1179,12 @@ class MLFrame(pd.DataFrame):
             The random seed to use
         verbose[bool]::
             Whether or not to show the model and plots
-        
+
         Returns
         ----------------------------------------
         model[sm.regression.linear_model.RegressionResultsWrapper]::
             The best model of the train_test_split
-        
+
         Example Usage
         ----------------------------------------
         >>> df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
@@ -1209,7 +1204,7 @@ class MLFrame(pd.DataFrame):
         dtype: float64
         """
         r2dict = {}
-        r2scores = {}
+        # r2scores = {}
         test_amount = test_size
         for x in range(0, test_amount):
             np.random.seed(seed)
@@ -1225,15 +1220,14 @@ class MLFrame(pd.DataFrame):
             df_test = MLFrame(df_test)
 
             model = df_train.lrmodel(target, verbose=False)
-            r2dict.update({model.rsquared:(
+            r2dict.update({model.rsquared: (
                 model, df_train[target], c)})
-            y_train = model.predict(df_train)
-            y_test = model.predict(df_test)
-            r2_train = r2_score(df_train[target],y_train)
-            r2_test = r2_score(df_test[target],y_test)
-        model, X, test_size = sorted(r2dict.items(),
-                                  key=lambda x: x[0])[-1][1]
-        
+            # y_train = model.predict(df_train)
+            # y_test = model.predict(df_test)
+            # r2_train = r2_score(df_train[target], y_train)
+            # r2_test = r2_score(df_test[target], y_test)
+        model, X, test_size = sorted(r2dict.items(), key=lambda x: x[0])[-1][1]
+
         self.model = model
         fig, axes = plt.subplots(nrows=2, figsize=(10, 10))
         fig.tight_layout(pad=8.0)
@@ -1250,45 +1244,3 @@ class MLFrame(pd.DataFrame):
                 print(model.summary())
             plt.show()
         return model
-
-
-def test_car():
-    df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
-    df.clean_col_names(inplace=True)
-    df['model'] = df['car_name'].apply(lambda x: x.split(' ')[0])
-    df.drop(['car_name'], axis=1, inplace=True)
-    df['model'] = df['model'].astype('category')
-    df_ohe = df.one_hot_encode(['model'])
-    df_ohe.clean_col_names(inplace=True)
-    df_ohe.model_and_plot('horsepower', inplace=True)
-    print(df_ohe.model.summary())
-
-def test_houses():
-    df = MLFrame(pd.read_csv('kc_house_data.csv'))
-    first_model = df.fill_na_mode(  # Fill na for the model
-        ).drop(['date', 'sqft_basement'], axis=1  # Dropping date and
-        ).model_and_plot('price')                 # sqft_basement for example
-    #df.model = first_model
-    #df.plot_coef()
-    #df.plot_corr(annot=True)
-    df['sqft_basement'] = df['sqft_basement'].apply(
-        lambda x: 0 if x == '?' else x)
-    df['sqft_basement'] = df['sqft_basement'].astype(float)
-    cat_cols = ['zipcode', 'condition', 'view']
-    for col in cat_cols:
-        df[col] = df[col].astype('category')
-    df_ohe = df.drop(['date', 'id', 'lat', 'long'], axis=1
-        ).one_hot_encode(cat_cols)
-    df_ohe['waterfront'].fillna(0, inplace=True)
-    df_ohe.fill_na_mode(inplace=True)
-    drop_cols = [x for x in df_ohe.columns if 'condition' in x]
-    drop_cols.append('sqft_living')
-    df_ohe.drop(drop_cols, axis=1, inplace=True)
-    df_ohe.clean_col_names(inplace=True)
-    df_ohe.model_and_plot('price')
-    print(df_ohe.model.summary())
-
-
-if __name__ == "__main__":
-    test_houses()
-    

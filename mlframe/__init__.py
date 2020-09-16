@@ -4,7 +4,7 @@
 
 __author__ = """Sam Stoltenberg"""
 __email__ = 'sam@skelouse.com'
-__version__ = '0.1.8'
+__version__ = '0.1.9'
 
 from .mlframe import MLFrame
 print("For convinent loading 'from mlframe import MLFrame")
