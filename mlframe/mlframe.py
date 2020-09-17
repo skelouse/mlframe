@@ -670,12 +670,28 @@ class MLFrame(pd.DataFrame):
         """
         return ms.matrix(self, **kwargs)
 
-    def fill_na_mode(self, inplace=False, verbose=True):
-        """Fills na cells with the mode of it's
+    def fill_na_kind(self,
+                     kind='mean',
+                     columns=[],
+                     custom=0,
+                     inplace=False,
+                     verbose=True):
+        """Fills na cells with the selection of it's
         respective column
 
         Parameters
         ----------------------------------------
+        kind[str, tuple]::
+            'mean' default
+            'mode'
+            'median'
+            'perc' percent value_counts of it's respective column
+            'custom'
+                defaults to 0
+        columns[str or list]::
+            the column or columns to fill, defaults to all
+        custom::
+            the variable to fill the NA with kind='custom'
         inplace[bool]::
             Defines whether to return a new dataframe or
             mutate the dataframe.
@@ -686,7 +702,7 @@ class MLFrame(pd.DataFrame):
         Returns
         ----------------------------------------
         None if inplace, otherwise returns copy of dataframe
-        with nulls filled with mode
+        with nulls filled with kind selected
 
         Example Usage
         ----------------------------------------
@@ -699,113 +715,76 @@ class MLFrame(pd.DataFrame):
         0  0.0  NaN   2   3
         1  NaN  5.0   6   7
         2  NaN  9.0  10  11
-        >>> df.fill_na_mode()
+        >>> df.fill_na_kind('mean')
         Filling 66.67% of A with nan
         Filling 33.33% of B with 9.0
             A    B    C   D
         0  0.0  5.0   2   3
         1  0.0  5.0   6   7
         2  0.0  9.0  10  11
-
-        """
-        nulls = self.isna().sum()
-        null_perc = nulls[nulls > 0] / len(self)
-        null_cols = list(null_perc.index)
-        null_modes = dict(self[null_cols].mode())
-        if verbose:
-            for col, perc in null_perc.items():
-                print("Filling %s" % (round(perc*100, 2)),
-                      "\b%", "of %s with %s"
-                      % (col, null_modes[col]))
-        if inplace:
-            for col, mode in null_modes.items():
-                self[col] = self[col].fillna(mode[0])
-        else:
-            df = self.copy()
-            for col, mode in null_modes.items():
-                df[col] = df[col].fillna(mode[0])
-            return df
-
-    def fill_na_mean(self, inplace=False, verbose=True):
-        """Fills na cells with the mean of it's
-        respective column
-
-        Parameters
-        ----------------------------------------
-        inplace[bool]::
-            Defines whether to return a new dataframe or
-            mutate the dataframe.
-        verbose[bool]::
-            Whether to print out the filling information
-            or not.
-
-        Returns
-        ----------------------------------------
-        None if inplace, otherwise returns copy of dataframe
-        with nulls filled with mean
-
-        Example Usage
-        ----------------------------------------
-        >>> df = MLFrame(pd.DataFrame(np.arange(12).reshape(3, 4),
-        ...                   columns=['A', 'B', 'C', 'D']))
-        >>> df['A'].loc[1:3] = np.nan
-        >>> df['B'].loc[0] = np.nan
-        >>> df
+        >>> df.fill_na_kind('custom', custom=18)
+        Filling 66.67% of A with 18
+        Filling 33.33% of B with 18
             A    B   C   D
-        0  0.0  NaN   2   3
-        1  NaN  5.0   6   7
-        2  NaN  9.0  10  11
-        >>> df.fill_na_mean()
-        Filling 66.67% of A with nan
-        Filling 33.33% of B with 9.0
-            A    B    C   D
-        0  0.0  7.0   2   3
-        1  0.0  5.0   6   7
-        2  0.0  9.0  10  11
-
+        0  0.0  18   2   3
+        1  18  5.0   6   7
+        2  18  9.0  10  11
         """
+        if not columns:
+            columns = self.columns
+        elif isinstance(columns, str):
+            columns = [columns]
+        elif not isinstance(columns, list):
+            raise AttributeError("%s is not a valid column selection"
+                                 % columns)
         nulls = self.isna().sum()
         null_perc = nulls[nulls > 0] / len(self)
         null_cols = list(null_perc.index)
-        null_means = dict(self[null_cols].mean())
+        # get columns that are in the given list of columns
+        cols = [col for col in null_cols if col in columns]
+        cols = self[cols]
+        if kind == 'mean':
+            null_fills = cols.mean()
+        elif kind == 'mode':
+            null_fills = cols.mode()
+        elif kind == 'median':
+            null_fills = cols.median()
+        elif kind == 'perc':
+            raise AttributeError('perc not yet implemented')
+        elif kind == 'custom':
+            raise AttributeError('custom not yet implemented')
+        null_fills = dict(null_fills)
+
         if verbose:
             for col, perc in null_perc.items():
                 print("Filling %s" % (round(perc*100, 2)),
                       "\b%", "of %s with %s"
-                      % (col, null_means[col]))
+                      % (col, null_fills[col]))
+
+        def fill_df(df):
+            """filling the dataframe with the given kind"""
+
+            def check_fill(col, fill):
+                """Checking if fill is NaN"""
+                if np.isnan(fill):
+                    print("WARNING")
+                    print('%s filled with NaN because %s is NaN'
+                          % (col, kind))
+
+            for col, fill in null_fills.items():
+                if isinstance(fill, pd.Series):  # if multiple modes
+                    fill = fill.mean()
+                    check_fill(col, fill)
+                    df[col] = df[col].fillna(fill)
+                else:
+                    check_fill(col, fill)
+                    df[col] = df[col].fillna(fill)
+            return df
         if inplace:
-            for col, mean in null_means.items():
-                self[col] = self[col].fillna(mean)
+            fill_df(self)
         else:
             df = self.copy()
-            for col, mean in null_means.items():
-                df[col] = df[col].fillna(mean)
-            return df
-
-    def fill_na_perc(self, inplace=False, verbose=True):
-        """
-        * Not implemented *
-        Fills na cells with the percent value_counts
-        of it's respective column
-
-        Parameters
-        ----------------------------------------
-        inplace[bool]::
-            Defines whether to return a new dataframe or
-            mutate the dataframe
-        verbose[bool]::
-            Whether to print out how many were filled
-            in each column or not
-
-        Returns
-        ----------------------------------------
-        None if inplace, otherwise returns copy of dataframe
-        with nulls filled with mode
-
-        Example Usage
-        ----------------------------------------
-        """
-        raise AttributeError('Not Implemented')
+            return fill_df(df)
 
     def qq_plot(self, model=None, **kwargs):
         """Plots a statsmodels QQplot of the dataframe
@@ -984,7 +963,8 @@ class MLFrame(pd.DataFrame):
         self.lrmodel(target, inplace=True, verbose=verbose, **kwargs)
         model = self.model
         fig, axes = plt.subplots(nrows=2, figsize=figsize)
-        fig.tight_layout(pad=8.0)
+        # fig.tight_layout(pad=8.0)
+        # Causes SVD did not converge
         self.qq_plot(ax=axes[0])
         self.model_resid_scatter(
             target,
@@ -1277,3 +1257,4 @@ class MLFrame(pd.DataFrame):
             self.model = model
         else:
             return model
+
