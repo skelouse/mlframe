@@ -681,7 +681,7 @@ class MLFrame(pd.DataFrame):
 
         Parameters
         ----------------------------------------
-        kind[str, tuple]::
+        kind[str]::
             'mean' default
             'mode'
             'median'
