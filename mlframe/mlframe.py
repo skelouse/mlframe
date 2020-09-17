@@ -963,8 +963,7 @@ class MLFrame(pd.DataFrame):
         self.lrmodel(target, inplace=True, verbose=verbose, **kwargs)
         model = self.model
         fig, axes = plt.subplots(nrows=2, figsize=figsize)
-        # fig.tight_layout(pad=8.0)
-        # Causes SVD did not converge
+        fig.tight_layout(pad=8.0)
         self.qq_plot(ax=axes[0])
         self.model_resid_scatter(
             target,
