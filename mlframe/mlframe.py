@@ -6,7 +6,7 @@ import statsmodels.formula.api as smf
 import scipy.stats as stats
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 from sklearn.model_selection import train_test_split
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import seaborn as sns
 import missingno as ms
 from inspect import getmembers, isfunction
