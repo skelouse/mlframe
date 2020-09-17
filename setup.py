@@ -19,8 +19,7 @@ requirements = [
     'seaborn>=0.10.1',
     'statsmodels',
     'scipy>=1.3.1',
-    'scikit-learn',
-    'tox'
+    'scikit-learn'
 ]
 
 setup_requirements = []
@@ -37,11 +36,8 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Natural Language :: English',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
     ],
     description="mlframe package.",
     install_requires=requirements,
@@ -63,6 +59,6 @@ setup(
         "Frame Documentation": "https://mlframe.readthedocs.io/en/latest/api/mlframe.MLFrame.html"
     },
     url='https://github.com/skelouse/mlframe',
-    version='0.1.10',
+    version='0.1.13',
     zip_safe=False,
 )

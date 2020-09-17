@@ -1,12 +1,14 @@
 # def test_car():
-#     df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+#     df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
 #     df.clean_col_names(inplace=True)
 #     df['model'] = df['car_name'].apply(lambda x: x.split(' ')[0])
 #     df.drop(['car_name'], axis=1, inplace=True)
 #     df['model'] = df['model'].astype('category')
 #     df_ohe = df.one_hot_encode(['model'])
 #     df_ohe.clean_col_names(inplace=True)
-#     df_ohe.model_and_plot('horsepower', inplace=True)
+#     df_ohe.model_and_plot('horsepower', verbose=False)
+#     df_ohe.train_test_split('horsepower', test_size=5, plot=False,
+#                             verbose=False)
 #     print(df_ohe.model.summary())
 
 # def test_houses():

@@ -1,8 +1,11 @@
 import importlib
 import pandas as pd
+import warnings
 import mlframe
 importlib.reload(mlframe)
 from mlframe import MLFrame # noqa
+
+warnings.filterwarnings('ignore')
 
 df_test = None
 
@@ -17,6 +20,7 @@ class Tester():
             global df_test
             # to keep df loaded, doesn't have to be reloaded for each test
             df = df_test.copy()
+            df.model = None
             try:
                 print('Checking', test_func.__name__, end='--')
                 a = test_func.main(df)
@@ -62,6 +66,7 @@ class Tester():
         fill_na_mean(self)
         qq_plot(self)
         model_resid_scatter(self)
+        train_test_split(self)
         lrmodel(self)
         plot_corr(self)
         plot_coef(self)
@@ -69,7 +74,8 @@ class Tester():
         distplot(self)
         jointplot(self)
         boxplot(self)
-        train_test_split(self)
+        
+        get_cols(self)
 
         if self.failed == 1:
             print("Failed 1 test, as expected")
@@ -93,9 +99,8 @@ def clean_col_names(t):  # added
 
 def get_vif(t):  # added
     from tests import get_vif
-    expected = [763.5575310251623, 10.737535245738526, 21.836791893715727,
-                9.943693436409594, 10.831259609800762, 2.625806211429102,
-                1.2449520253939663, 1.77238641828304]
+    expected = [763.5575, 10.7375, 21.8368, 9.9437,
+                10.8313, 2.6258, 1.245, 1.7724]
     t(get_vif, expected)
 
 
@@ -107,25 +112,19 @@ def get_vif_cols(t):  # added
 
 def log(t):  # added
     from tests import log
-    expected = [2.8903717578961645, 2.70805020110221, 2.8903717578961645,
-                2.772588722239781, 2.833213344056216, 2.70805020110221,
-                2.6390573296152584, 2.6390573296152584, 2.6390573296152584,
-                2.70805020110221, 2.70805020110221, 2.6390573296152584,
-                2.70805020110221, 2.6390573296152584, 3.1780538303479458,
-                3.091042453358316, 2.8903717578961645, 3.044522437723423,
-                3.295836866004329, 3.258096538021482]
+    expected = [2.8904, 2.7081, 2.8904, 2.7726, 2.8332, 2.7081,
+                2.6391, 2.6391, 2.6391, 2.7081, 2.7081, 2.6391,
+                2.7081, 2.6391, 3.1781, 3.091, 2.8904, 3.0445,
+                3.2958, 3.2581]
     t(log, expected)
 
 
 def scale(t):  # added
     from tests import scale
-    expected = [-0.6986384086952153, -1.083498240354187, -0.6986384086952153,
-                -0.9552116298011964, -0.8269250192482058, -1.083498240354187,
-                -1.2117848509071776, -1.2117848509071776, -1.2117848509071776,
-                -1.083498240354187, -1.083498240354187, -1.2117848509071776,
-                -1.083498240354187, -1.2117848509071776, 0.07108125462272814,
-                -0.185491966483253, -0.6986384086952153, -0.31377857703624357,
-                0.4559410862816999, 0.3276544757287093]
+    expected = [-0.6986, -1.0835, -0.6986, -0.9552, -0.8269, -1.0835,
+                -1.2118, -1.2118, -1.2118, -1.0835, -1.0835, -1.2118,
+                -1.0835, -1.2118, 0.0711, -0.1855, -0.6986, -0.3138,
+                0.4559, 0.3277]
     t(scale, expected)
 
 
@@ -237,7 +236,13 @@ def boxplot(t):  # added
     t(boxplot, expected)
 
 
-def train_test_split(t):  # added
+def get_cols(t):  # added
+    from tests import get_cols
+    expected = ['mpg', 'cylinders', 'displacement', 'acceleration', 'car name']
+    t(get_cols, expected)
+
+
+def train_test_split(t):
     from tests import train_test_split
     expected = 0.5028
     t(train_test_split, expected)
@@ -254,10 +259,25 @@ def xxxxx(t):
 
 def quick_test(dft):
     """For building new tests"""
-    from tests import outlier_removal
-    importlib.reload(outlier_removal)
-    from tests import outlier_removal
-    print(outlier_removal.main(df_test))
+    # from tests import get_vif_cols
+    # importlib.reload(get_vif_cols)
+    # from tests import get_vif_cols
+    # print(get_vif_cols.main(df_test))
+
+    # from tests import get_vif_cols
+    # importlib.reload(get_vif_cols)
+    # from tests import get_vif_cols
+    # print(get_vif_cols.main(df_test))
+
+    from tests import train_test_split
+    # importlib.reload(train_test_split)
+    # from tests import train_test_split
+    print(train_test_split.main(df_test))
+
+    # from tests import train_test_split
+    # importlib.reload(train_test_split)
+    # from tests import train_test_split
+    print(train_test_split.main(df_test))
 
 
 def test_all(df):
@@ -283,5 +303,5 @@ def test_all(df):
 
 
 if __name__ == "__main__":
-    df = MLFrame(pd.read_csv('mltools/tests/auto-mpg.csv'))
+    df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
     test_all(df)

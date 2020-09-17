@@ -62,7 +62,7 @@ Ready to contribute? Here's how to set up `mlframe` for local development.
 1. Fork the `mlframe` repo on GitHub.
 2. Clone your fork locally::
 
-    $ git clone git@github.com:your_name_here/mlframe.git
+    $ git clone git@github.com:skelouse/mlframe.git
 
 3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
 
@@ -102,8 +102,8 @@ Before you submit a pull request, check that it meets these guidelines:
 2. If the pull request adds functionality, the docs should be updated. Put
    your new functionality into a function with a docstring, and add the
    feature to the list in README.rst.
-3. The pull request should work for Python 3.4, 3.5 and 3.6, and for PyPy. Check
-   https://travis-ci.org/ __url__
+3. The pull request should work for Python 3.6, 3.7, and for PyPy. Check
+   https://travis-ci.org/github/skelouse/mlframe
    and make sure that the tests pass for all supported Python versions.
 
 Tips
@@ -111,8 +111,11 @@ Tips
 
 To run a subset of tests::
 
-
-    $ python -m unittest tests.mlframe
+    $ from main directory
+    $ python mlframe/load_then_test.py
+    `enter`
+    # change full = 1  to full = 0 in test.py to have small tests
+    `enter`
 
 Deploying
 ---------
