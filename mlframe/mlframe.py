@@ -6,7 +6,7 @@ import statsmodels.formula.api as smf
 import scipy.stats as stats
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 from sklearn.model_selection import train_test_split
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import seaborn as sns
 import missingno as ms
 from inspect import getmembers, isfunction
@@ -807,7 +807,7 @@ class MLFrame(pd.DataFrame):
         """
         raise AttributeError('Not Implemented')
 
-    def qq_plot(self, **kwargs):
+    def qq_plot(self, model=None, **kwargs):
         """Plots a statsmodels QQplot of the dataframe
 
         Parameters
@@ -828,13 +828,17 @@ class MLFrame(pd.DataFrame):
         >>> df.lrmodel('mpg', inplace=True)
         >>> df.qq_plot()
         """
-        if self.model:
+        def plot(residuals):
             if 'ax' in kwargs:
                 kwargs['ax'].set_title('Model Residual QQ plot')
-            return sm.graphics.qqplot(self.model.resid,
+            return sm.graphics.qqplot(residuals,
                                       fit=True,
                                       line='45',
                                       **kwargs)
+        if model:
+            return plot(model.resid)
+        elif self.model:
+            return plot(self.model.resid)
         else:
             raise AttributeError('No model defined')
 
@@ -950,6 +954,7 @@ class MLFrame(pd.DataFrame):
     def model_and_plot(self,
                        target,
                        figsize=(10, 10),
+                       verbose=True,
                        **kwargs):
         """Creates a new model based on target, plots a
         scatter plot of (target, model residuals), and
@@ -959,6 +964,8 @@ class MLFrame(pd.DataFrame):
         ----------------------------------------
         target::[str]
             The target for which to model on
+        verbose[bool]::
+            Whether or not to display the model.summary()
         kwargs{dict}::
             Arguments that are sent to Model.from_formula()
             see:
@@ -974,7 +981,7 @@ class MLFrame(pd.DataFrame):
         >>> df.clean_col_names(inplace=True)
         >>> df.model_and_plot('mpg')
         """
-        self.lrmodel(target=target, inplace=True, verbose=True, **kwargs)
+        self.lrmodel(target, inplace=True, verbose=verbose, **kwargs)
         model = self.model
         fig, axes = plt.subplots(nrows=2, figsize=figsize)
         fig.tight_layout(pad=8.0)
@@ -1181,7 +1188,9 @@ class MLFrame(pd.DataFrame):
                          target,
                          test_size=100,
                          seed=42,
-                         verbose=True):
+                         plot=True,
+                         verbose=True,
+                         inplace=False):
         """
         Runs a train test split algorithm on the data
 
@@ -1193,8 +1202,13 @@ class MLFrame(pd.DataFrame):
             How many times to run the train_test_split
         seed[int]::
             The random seed to use
+        plot[bool]::
+            Whether or not to show the plots
         verbose[bool]::
-            Whether or not to show the model and plots
+            Whether or not to show the model
+        inplace[bool]::
+            Defines whether to return a new mode or
+            change the current model
 
         Returns
         ----------------------------------------
@@ -1234,7 +1248,6 @@ class MLFrame(pd.DataFrame):
                                     random_state=seed)
             df_train = MLFrame(df_train)
             df_test = MLFrame(df_test)
-
             model = df_train.lrmodel(target, verbose=False)
             r2dict.update({model.rsquared: (
                 model, df_train[target], c)})
@@ -1243,20 +1256,24 @@ class MLFrame(pd.DataFrame):
             # r2_train = r2_score(df_train[target], y_train)
             # r2_test = r2_score(df_test[target], y_test)
         model, X, test_size = sorted(r2dict.items(), key=lambda x: x[0])[-1][1]
-
-        self.model = model
-        fig, axes = plt.subplots(nrows=2, figsize=(10, 10))
-        fig.tight_layout(pad=8.0)
-        self.qq_plot(ax=axes[0])
-        axes[1].scatter(X, self.model.resid)
-        axes[1].axhline(0, color='k')
-        axes[1].set_xlabel(target)
-        axes[1].set_ylabel('Model Residuals')
+        if plot:
+            fig, axes = plt.subplots(nrows=2, figsize=(10, 10))
+            # fig.tight_layout(pad=8.0)
+            # Causes SVD did not converge when test_train_split is ran twice
+            self.qq_plot(ax=axes[0], model=model)
+            axes[1].scatter(X, model.resid)
+            axes[1].axhline(0, color='k')
+            axes[1].set_xlabel(target)
+            axes[1].set_ylabel('Model Residuals')
         if verbose:
             print('test_size = ', test_size)
             try:
                 display(model.summary())
             except NameError:
                 print(model.summary())
-            plt.show()
-        return model
+            if plot:
+                plt.show()
+        if inplace:
+            self.model = model
+        else:
+            return model

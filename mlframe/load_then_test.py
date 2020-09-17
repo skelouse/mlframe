@@ -14,7 +14,7 @@ def main(test, df):
 
 if __name__ == "__main__":
     df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
-    df.copy()
+    df = df.copy()
     while True:
         try:
             import test
