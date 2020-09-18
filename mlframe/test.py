@@ -1,10 +1,11 @@
 import importlib
 import pandas as pd
 import warnings
+import matplotlib as mpl
 import mlframe
 importlib.reload(mlframe)
 from mlframe import MLFrame # noqa
-
+mpl.use('pdf')
 warnings.filterwarnings('ignore')
 
 df_test = None
@@ -58,7 +59,6 @@ class Tester():
         one_hot_encode(self)
         find_outliers_IQR(self)
         find_outliers_Z(self)
-        outlier_removal(self)
         get_nulls(self)
         drop_nulls_perc(self)
         ms_matrix(self)
@@ -71,12 +71,12 @@ class Tester():
         plot_corr(self)
         plot_coef(self)
         regplot(self)
+        boxplot(self)
+        get_cols(self)
+        outlier_removal(self)
+        find_outliers_cooks_d(self)
         distplot(self)
         jointplot(self)
-        boxplot(self)
-        
-        get_cols(self)
-        find_outliers_cooks_d(self)
 
         if self.failed == 1:
             print("Failed 1 test, as expected")
@@ -149,7 +149,7 @@ def find_outliers_Z(t):  # added
 
 def outlier_removal(t):  # added
     from tests import outlier_removal
-    expected = 21
+    expected = 10
     t(outlier_removal, expected)
 
 
@@ -265,10 +265,10 @@ def xxxxx(t):
 
 def quick_test(dft):
     """For building new tests"""
-    # from tests import find_outliers_cooks_d
-    # importlib.reload(find_outliers_cooks_d)
-    # from tests import find_outliers_cooks_d
-    # print(find_outliers_cooks_d.main(df_test))
+    from tests import find_outliers_cooks_d
+    importlib.reload(find_outliers_cooks_d)
+    from tests import find_outliers_cooks_d
+    print(find_outliers_cooks_d.main(df_test))
 
 
 def test_all(df):

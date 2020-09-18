@@ -531,7 +531,7 @@ class MLFrame(pd.DataFrame):
         >>> df = MLFrame(df[~idx_outliers])
         """
         data = self
-        if threshold == None:
+        if not threshold:
             threshold = 4/(len(data))
         else:
             threshold = threshold
@@ -547,6 +547,7 @@ class MLFrame(pd.DataFrame):
             X, y,
             draw_threshold=True,
             linefmt="C0-", markerfmt=",")
+
         distance = pd.DataFrame(cd.distance_, columns=['distance'],
                                 index=data.index)
         data['distance'] = distance['distance']
