@@ -1,10 +1,11 @@
 import importlib
 import pandas as pd
 import warnings
+import matplotlib as mpl
 import mlframe
 importlib.reload(mlframe)
 from mlframe import MLFrame # noqa
-
+mpl.use('pdf')
 warnings.filterwarnings('ignore')
 
 df_test = None
@@ -58,7 +59,6 @@ class Tester():
         one_hot_encode(self)
         find_outliers_IQR(self)
         find_outliers_Z(self)
-        outlier_removal(self)
         get_nulls(self)
         drop_nulls_perc(self)
         ms_matrix(self)
@@ -73,12 +73,12 @@ class Tester():
         plot_corr(self)
         plot_coef(self)
         regplot(self)
-        # distplot(self)  causes svd did not converge in train_test_split
-        # jointplot(self)  causes svd did not converge in train_test_split
         boxplot(self)
-        train_test_split(self)
         get_cols(self)
-        fill_na_kind(self)
+        outlier_removal(self)
+        find_outliers_cooks_d(self)
+        distplot(self)
+        jointplot(self)
 
         if self.failed == 1:
             print("Failed 1 test, as expected")
@@ -264,6 +264,12 @@ def fill_na_kind(t):  # added
     t(fill_na_kind, expected)
 
 
+def find_outliers_cooks_d(t):
+    from tests import find_outliers_cooks_d
+    expected = 21
+    t(find_outliers_cooks_d, expected)
+
+
 # skeleton
 """
 def xxxxx(t):
@@ -275,20 +281,10 @@ def xxxxx(t):
 
 def quick_test(dft):
     """For building new tests"""
-    # from tests import jointplot
-    # importlib.reload(jointplot)
-    # from tests import jointplot
-    # print(jointplot.main(df_test))
-
-    # from tests import train_test_split
-    # importlib.reload(train_test_split)
-    # from tests import train_test_split
-    # print(train_test_split.main(df_test))
-
-    from tests import fill_na_kind
-    importlib.reload(fill_na_kind)
-    from tests import fill_na_kind
-    print(fill_na_kind.main(df_test))
+    from tests import find_outliers_cooks_d
+    importlib.reload(find_outliers_cooks_d)
+    from tests import find_outliers_cooks_d
+    print(find_outliers_cooks_d.main(df_test))
 
 
 def test_all(df):
