@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import missingno as ms
 from inspect import getmembers, isfunction
+from yellowbrick.regressor import cooks_distance
 
 
 def inherit_docstrings(cls):
@@ -508,12 +509,62 @@ class MLFrame(pd.DataFrame):
                   .format(total, col, total_perc))
         return idx_outliers
 
+    def find_outliers_cooks_d(self, target, threshold=None, verbose=True):
+        """Finds outliers using the Cook's Distance method
+        ----------------------------------------
+        target[str]::
+            Name of the target column for you model.
+        Threshold[int]::
+            Threshold at which to drop outliers, defauts to 4/n, n being the
+            length of the data frame.
+        verbose[bool]::
+            Whether to print out the series or not
+
+        Returns
+        ----------------------------------------
+        True/False Series of the outliers (True is outlier)
+
+        Example Usage
+        ----------------------------------------
+        >>> df = MLFrame(pd.read_csv('mlframe/tests/auto-mpg.csv'))
+        >>> idx_outliers = df.find_outliers_cooks_d('horsepower', verbose=True)
+        >>> df = MLFrame(df[~idx_outliers])
+        """
+        data = self
+        if threshold == None:
+            threshold = 4/(len(data))
+        else:
+            threshold = threshold
+        lst = list(data.select_dtypes('O').columns)
+        data.drop(columns=lst, axis=1, inplace=True)
+        for col in list(data.columns):
+            data[col] = data[col].astype('float')
+        y = data[target]
+        Xlist = list(data.columns)
+        Xlist.remove(target)
+        X = data[Xlist]
+        cd = cooks_distance(
+            X, y,
+            draw_threshold=True,
+            linefmt="C0-", markerfmt=",")
+        distance = pd.DataFrame(cd.distance_, columns=['distance'],
+                                index=data.index)
+        data['distance'] = distance['distance']
+        idx_outliers = data['distance'] > threshold
+        if verbose:
+            total = idx_outliers.sum()
+            total_perc = round((total/len(self))*100, 2)
+            print("Found {} outliers using Cook's Distance or ~ {}%"
+                  .format(total, total_perc))
+        return idx_outliers
+
     def outlier_removal(self,
                         columns=[],
                         IQR=False,
                         z_score=False,
+                        cooks_d=False,
                         verbose=True):
-        """Removes outliers based on IQR or z_score
+        """Removes outliers based on IQR or z_score or Cook's Distance
 
         Parameters
         ----------------------------------------
@@ -526,6 +577,9 @@ class MLFrame(pd.DataFrame):
         z_score[bool]::
             Whether or not to remove outliers
             using z_score method
+        cooks_d[bool]::
+            Whether or not to remove outliers
+            using the cooks_d method
         verbose[bool]::
             Whether to print how many outliers were
             found in each column or now
@@ -556,6 +610,10 @@ class MLFrame(pd.DataFrame):
         elif z_score:
             _type = 'z_score'
             func = partial(self.find_outliers_Z,
+                           verbose=verbose)
+        elif cooks_d:
+            _type = 'cooks_d'
+            func = partial(self.find_outliers_cooks_d,
                            verbose=verbose)
         else:
             raise AttributeError("No method defined (z_score or IQR)")

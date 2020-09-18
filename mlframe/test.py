@@ -76,6 +76,7 @@ class Tester():
         boxplot(self)
         
         get_cols(self)
+        find_outliers_cooks_d(self)
 
         if self.failed == 1:
             print("Failed 1 test, as expected")
@@ -148,7 +149,7 @@ def find_outliers_Z(t):  # added
 
 def outlier_removal(t):  # added
     from tests import outlier_removal
-    expected = 10
+    expected = 21
     t(outlier_removal, expected)
 
 
@@ -248,6 +249,11 @@ def train_test_split(t):
     t(train_test_split, expected)
 
 
+def find_outliers_cooks_d(t):
+    from tests import find_outliers_cooks_d
+    expected = 21
+    t(find_outliers_cooks_d, expected)
+
 # skeleton
 """
 def xxxxx(t):
@@ -259,25 +265,10 @@ def xxxxx(t):
 
 def quick_test(dft):
     """For building new tests"""
-    # from tests import get_vif_cols
-    # importlib.reload(get_vif_cols)
-    # from tests import get_vif_cols
-    # print(get_vif_cols.main(df_test))
-
-    # from tests import get_vif_cols
-    # importlib.reload(get_vif_cols)
-    # from tests import get_vif_cols
-    # print(get_vif_cols.main(df_test))
-
-    from tests import train_test_split
-    # importlib.reload(train_test_split)
-    # from tests import train_test_split
-    print(train_test_split.main(df_test))
-
-    # from tests import train_test_split
-    # importlib.reload(train_test_split)
-    # from tests import train_test_split
-    print(train_test_split.main(df_test))
+    # from tests import find_outliers_cooks_d
+    # importlib.reload(find_outliers_cooks_d)
+    # from tests import find_outliers_cooks_d
+    # print(find_outliers_cooks_d.main(df_test))
 
 
 def test_all(df):
