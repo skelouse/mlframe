@@ -107,7 +107,7 @@ class MLFrame(pd.DataFrame):
         verbose[bool]::
             Whether to show the difference between
             the old columns and clean columns or not
-        replace_numbers[bool]:: 
+        replace_numbers[bool]::
             Whether to replace numbers with their
             english counterpart i.e (1 -> one)
 
@@ -1256,4 +1256,3 @@ class MLFrame(pd.DataFrame):
             self.model = model
         else:
             return model
-
