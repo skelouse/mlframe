@@ -62,23 +62,16 @@ class Tester():
         get_nulls(self)
         drop_nulls_perc(self)
         ms_matrix(self)
-
-        # deprecated
-        # fill_na_mode(self)
-        # fill_na_mean(self)
-
+        fill_na_kind(self)
         qq_plot(self)
         model_resid_scatter(self)
         lrmodel(self)
         plot_corr(self)
         plot_coef(self)
-        regplot(self)
-        boxplot(self)
         get_cols(self)
         outlier_removal(self)
         find_outliers_cooks_d(self)
-        distplot(self)
-        jointplot(self)
+
 
         if self.failed == 1:
             print("Failed 1 test, as expected")
@@ -173,21 +166,6 @@ def ms_matrix(t):  # added
     t(ms_matrix, expected)
 
 
-# deprecated
-"""
-def fill_na_mode(t):  # added
-    from tests import fill_na_mode
-    expected = 0
-    t(fill_na_mode, expected)
-
-
-def fill_na_mean(t):  # added
-    from tests import fill_na_mean
-    expected = 0
-    t(fill_na_mean, expected)
-"""
-
-
 def qq_plot(t):  # added
     from tests import qq_plot
     expected = 1
@@ -216,30 +194,6 @@ def plot_coef(t):  # added
     from tests import plot_coef
     expected = 1
     t(plot_coef, expected)
-
-
-def regplot(t):  # added
-    from tests import regplot
-    expected = 1
-    t(regplot, expected)
-
-
-def distplot(t):  # added
-    from tests import distplot
-    expected = 1
-    t(distplot, expected)
-
-
-def jointplot(t):  # added
-    from tests import jointplot
-    expected = 1
-    t(jointplot, expected)
-
-
-def boxplot(t):  # added
-    from tests import boxplot
-    expected = 1
-    t(boxplot, expected)
 
 
 def get_cols(t):  # added
