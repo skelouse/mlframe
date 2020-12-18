@@ -368,6 +368,14 @@ class MLFrame(pd.DataFrame):
         return super(MLFrame, self).copy(*args, **kwargs)
 
     @wrapper
+    def replace(self, *args, **kwargs):
+        return super(MLFrame, self).replace(*args, **kwargs)
+
+    @wrapper
+    def fillna(self, *args, **kwargs):
+        return super(MLFrame, self).fillna(*args, **kwargs)
+
+    @wrapper
     def wrap__getitem__(self, df):
         """Wrapper for get item [] so that it returns an
         MLFrame rather then a pd.DataFrame"""
